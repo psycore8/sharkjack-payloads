@@ -195,7 +195,7 @@ URLs used for retrieving staged code should refer exclusively to **example.com**
 
 ### Staged Example
 
-**Example scenario: your payload downloads a script and the executes it on a target machine.**
+**Example scenario: your payload downloads a script and then executes it on a target machine.**
 - Include the script in the directory with your payload
 - Provide instructions for the user to move the script to the appropriate hosting service.
 - Provide a bash variable with the placeholder example.com for the user to easily configure once they have hosted the script
